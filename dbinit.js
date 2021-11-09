@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+const { Sequelize } = require('sequelize');
 
 // connection information
 const sequelize = new Sequelize('database', 'user', 'password', {
@@ -6,8 +6,15 @@ const sequelize = new Sequelize('database', 'user', 'password', {
     dialect: 'sqlite',
     logging: false,
     // SQLite only
-    storage: 'database.sqlite'
+    storage: 'path_to_database'
   })
 
-// add models here
-const  
+  require('./models/Movie.js')(sequelize, Sequelize.DataTypes);
+  (async () => {
+    await sequelize.sync()
+    console.log("Tables Created")
+    sequelize.close();
+  })();
+
+  
+
