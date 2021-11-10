@@ -10,12 +10,19 @@ const sequelize = new Sequelize('database', 'user', 'password', {
     storage: process.env.DATABASE_PATH
   })
 
+  const ActionShop = require('./models/ActionShop.js')(sequelize, Sequelize.DataTypes);
+  require('./models/Users.js')(sequelize, Sequelize.DataTypes);
   require('./models/Movie.js')(sequelize, Sequelize.DataTypes);
-  (async () => {
-    await sequelize.sync({force: true})
-    console.log("Tables Created")
-    sequelize.close();
-  })();
 
+  sequelize.sync({ force: true }).then(async () => {
+    const shop = [
+      ActionShop.upsert({ name: 'Double Vote', cost: 1 }),
+      ActionShop.upsert({ name: 'Survey Takeover', cost: 3 }),
+      ActionShop.upsert({ name: 'Takeover', cost: 5 }),
+    ];
   
-
+    await Promise.all(shop);
+    console.log('Database synced');
+  
+    sequelize.close();
+  }).catch(console.error);
