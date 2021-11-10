@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Sequelize = require('sequelize');
 
 // connection information
@@ -6,7 +7,7 @@ const sequelize = new Sequelize('database', 'user', 'password', {
     dialect: 'sqlite',
     logging: false,
     // SQLite only
-    storage: 'path_to_database'
+    storage: process.env.DATABASE_PATH
   })
 
 const Movies = require('./models/Movie.js')(sequelize, Sequelize.DataTypes)

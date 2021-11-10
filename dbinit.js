@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { Sequelize } = require('sequelize');
 
 // connection information
@@ -6,12 +7,12 @@ const sequelize = new Sequelize('database', 'user', 'password', {
     dialect: 'sqlite',
     logging: false,
     // SQLite only
-    storage: 'path_to_database'
+    storage: process.env.DATABASE_PATH
   })
 
   require('./models/Movie.js')(sequelize, Sequelize.DataTypes);
   (async () => {
-    await sequelize.sync()
+    await sequelize.sync({force: true})
     console.log("Tables Created")
     sequelize.close();
   })();

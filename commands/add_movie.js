@@ -1,19 +1,16 @@
 const Discord = require('discord.js');
-// const { Sequelize, Model, DataTypes, STRING } = require('sequelize');
+const { dateFormatter } = require('../util/helpers.js')
 const { Movies } = require('../dbObjects.js')
 
 
 module.exports = {
     prefix: "!add_movie",
     fn: async (msg, args) => {
-        // will return a list of movies watched on the channel
-        // needs database
+        // TODO add admin only privledge
+        // TODO need to account for spaces in
         const movieTitle = args[0]
-        console.log(movieTitle)
-        var dateWatched = new Date()
-        const offset = dateWatched.getTimezoneOffset()
-        dateWatched = new Date(dateWatched.getTime() - (offset*60*1000))
+        const dateWatched = String(dateFormatter(new Date()))
         const newAddition = await Movies.create({title: movieTitle, date_watched: dateWatched})
-        msg.reply(`Have added movie ${newAddition.movieTitle} for date ${newAddition.date_watched}`)
+        msg.reply(`Have added movie ${newAddition.title} for date ${newAddition.date_watched}`)
     }
 }

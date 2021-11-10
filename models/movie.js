@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false
         },
         date_watched: {
-          type: DataTypes.DATE,
+          type: DataTypes.STRING,
           allowNull: false
         }
       })
