@@ -8,7 +8,8 @@ module.exports = {
     prefix: "!poll",
     // Define a function to pass the message to
     fn: async (msg, args) =>  {
-        const options = [
+      if (!msg.member.roles.cache.has('908139298811969566')) return msg.reply('Only Admins can grant currency!')  
+      const options = [
             '🇦',
             '🇧',
             '🇨',
