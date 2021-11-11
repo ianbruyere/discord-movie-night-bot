@@ -10,7 +10,7 @@ module.exports = {
            `Here's a list of commands.\n` +
            `Anything in <> are additional parameters to be provided by the User.` +
            `${Formatters.codeBlock(
-            `!subscribe : command adds your user_id to the database so you can earn - and spend - money\n` +
+            `!subscribe movies : command adds your user_id to the database so you can earn - and spend - money\n` +
             `!shop : Displays the shop.\n` + 
             `!balance : will tell you how much money you have\n` +
             `!buy <action_name> : allows you to buy from the action shop, meaning you take this action.\n` +

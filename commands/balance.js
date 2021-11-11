@@ -1,4 +1,4 @@
-const { Users, ActionShop, currency } = require('../dbObjects.js');
+const { Users } = require('../dbObjects.js');
 
 module.exports = {
     prefix: "!balance",
