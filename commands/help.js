@@ -1,9 +1,9 @@
 const Discord = require(`discord.js`);
 
 module.exports = {
-    // Define the prefix
-    prefix: "!test",
+    // Will bring up all possible commands for Bot
+    prefix: "!help",
     fn: async (msg) => {
-      console.log("Here!")
+      msg.repl
     }
 }
