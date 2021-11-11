@@ -3,7 +3,7 @@ const { Movies } = require('../dbObjects.js')
 
 module.exports = {
     prefix: "!watched",
-    fn: async (msg, args) => {
+    fn: async (msg) => {
         // returns list of watched movies
         // TODO nicer formatting
         const movies = await Movies.findAll()

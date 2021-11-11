@@ -1,20 +1,21 @@
 const { Users, ActionShop, currency } = require('../dbObjects.js');
-
+const { Op } = require('sequelize');
 
 module.exports = {
     prefix: "!buy",
     fn: async(interaction, args) => {
-        const itemName = interaction.options.getString('item');
+        const itemName = args.join(' ');
         const item = await ActionShop.findOne({ where: { name: { [Op.like]: itemName } } });
+        const user = await Users.findOne({ where: { user_id: interaction.author.id } });
+        
         
         if (!item) return interaction.reply(`That item doesn't exist.`);
-        if (item.cost > currency.getBalance(interaction.user.id)) {
-            return interaction.reply(`You currently have ${currency.getBalance(interaction.user.id)}, but the ${item.name} costs ${item.cost}!`);
+        if (item.cost > user.balance) {
+            return interaction.reply(`You currently have ${user.balance}, but the ${item.name} costs ${item.cost}!`);
         }
         
-        const user = await Users.findOne({ where: { user_id: interaction.user.id } });
-        currency.add(interaction.user.id, -item.cost);
-        
+        user.balance -= item.cost;
+        await user.save();
         return interaction.reply(`You've bought: ${item.name}.`);
     }
 }

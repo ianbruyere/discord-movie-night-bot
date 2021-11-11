@@ -5,6 +5,5 @@ module.exports = {
     prefix: "!test",
     fn: async (message) => {
       console.log("Here!")
-   
     }
 }
