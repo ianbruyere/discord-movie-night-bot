@@ -41,10 +41,5 @@ Reflect.defineProperty(currency, 'getBalance', {
 	},
 });
 
-Reflect.defineProperty(Movies.prototype, 'getMovies', {
-    value: function getMovies() {
-        return Movies.findAll()
-    }
-})
 
 module.exports = { Movies, Users, ActionShop, currency }

@@ -6,11 +6,12 @@ const { Movies } = require('../dbObjects.js')
 module.exports = {
     prefix: "!add_movie",
     fn: async (msg, args) => {
-        // TODO add admin only privledge
-        // TODO need to account for spaces in
+        if (!msg.member.roles.cache.has('908139298811969566')){
+            return msg.reply('Only Admins can add movies!')
+        }
         const movieTitle = args.join(' ')
         const dateWatched = String(dateFormatter(new Date()))
         const newAddition = await Movies.create({title: movieTitle, date_watched: dateWatched})
-        msg.reply(`Have added movie ${newAddition.title} for date ${newAddition.date_watched}`)
+        return msg.reply(`Have added movie ${newAddition.title} for date ${newAddition.date_watched}`)
     }
 }
