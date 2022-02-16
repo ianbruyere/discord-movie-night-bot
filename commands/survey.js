@@ -1,3 +1,4 @@
+require('dotenv').config();
 const squigglyRegex = RegExp(/{(.*?)}/);
 const squareRegex = RegExp(/\[[^[]+\]/g);
 const timeRegex = RegExp(/{(\d+(s|m|h|d|w))}/);
@@ -8,7 +9,7 @@ module.exports = {
     prefix: "!poll",
     // Define a function to pass the message to
     fn: async (msg, args) =>  {
-      if (!msg.member.roles.cache.has('908139298811969566')) return msg.reply('Only Admins can grant currency!')  
+      if (!msg.member.roles.cache.has(process.env.ADMIN_ROLE_ID)) return msg.reply('Only Admins can grant currency!')  
       const options = [
             '🇦',
             '🇧',

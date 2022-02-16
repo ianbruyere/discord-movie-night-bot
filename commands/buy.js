@@ -1,4 +1,4 @@
-const { Users, ActionShop, currency } = require('../dbObjects.js');
+const { Users, ActionShop } = require('../dbObjects.js');
 const { Op } = require('sequelize');
 
 module.exports = {

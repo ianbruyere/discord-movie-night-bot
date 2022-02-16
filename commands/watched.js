@@ -6,7 +6,13 @@ module.exports = {
     fn: async (msg) => {
         // returns list of watched movies
         const movies = await Movies.findAll()
+        ratingsArray = [
+            '🤬', 
+            '💩',
+            '😁',
+            '🔥'
+            ]
         return msg.reply(`The following movies have been watched:
-        ${Formatters.codeBlock(movies.map(x =>  `${x.title}------${x.date_watched}`).join('\n'))}`);
+        ${Formatters.codeBlock(movies.map(x =>  `${x.title}------${x.date_watched}-------${ratingsArray[x.rating]}`).join('\n'))}`);
     }
 }

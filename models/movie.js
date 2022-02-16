@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
         date_watched: {
           type: DataTypes.STRING,
           allowNull: false
+        },
+        rating: {
+          type: DataTypes.INTEGER,
+          allowNull: true
         }
       })
 }

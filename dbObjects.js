@@ -13,6 +13,7 @@ const sequelize = new Sequelize('database', 'user', 'password', {
 
 const Movies = require('./models/Movie.js')(sequelize, Sequelize.DataTypes)
 const Users = require('./models/Users.js')(sequelize, Sequelize.DataTypes)
+const User_Movies = require('./models/User_Movies.js')(sequelize, Sequelize.DataTypes)
 const ActionShop = require('./models/ActionShop.js')(sequelize, Sequelize.DataTypes)
 const currency = new Collection()
 
@@ -42,4 +43,4 @@ Reflect.defineProperty(currency, 'getBalance', {
 });
 
 
-module.exports = { Movies, Users, ActionShop, currency }
+module.exports = { Movies, Users, ActionShop, currency, User_Movies }
