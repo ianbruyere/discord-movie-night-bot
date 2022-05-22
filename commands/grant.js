@@ -1,5 +1,5 @@
 require('dotenv').config()
-const idRegEx = RegExp(/\d+/);
+const idRegEx =/\d+/g;
 const { Users } = require('../dbObjects.js');
 
 
@@ -8,11 +8,12 @@ module.exports = {
     fn: async(msg, args) => {
         // admin hands out currency
         if (!msg.member.roles.cache.has(process.env.ADMIN_ROLE_ID)) return msg.reply('Only Admins can grant currency!')
-        const user_id = idRegEx.exec(args[0])[1]
-        const user = await Users.findOne({user_id : user_id})
+        let user_id = String(args[0]).match(idRegEx)[0]
+        const user = await Users.findOne({where: {user_id : user_id}})
+        if (!user) return msg.reply("This user doesn't exist in database")
         const amount = Number(args[1])
         user.balance += amount
         await user.save()         
-        msg.reply(`${args[2]} has been granted ${amount}💰`)
+        msg.reply(`${args[2]} has been granted ${amount}💰`).then(timeout)
     }
 }

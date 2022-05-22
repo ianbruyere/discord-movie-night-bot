@@ -1,6 +1,6 @@
 require('dotenv').config();
 const Discord = require('discord.js');
-const { dateFormatter } = require('../util/helpers.js')
+const { dateFormatter, timeout } = require('../util/helpers.js')
 const { Movies } = require('../dbObjects.js')
 
 
@@ -13,5 +13,6 @@ module.exports = {
         const dateWatched = String(dateFormatter(new Date()))
         const newAddition = await Movies.create({title: movieTitle, date_watched: dateWatched, rating: rating})
         return msg.reply(`Have added movie ${newAddition.title} for date ${newAddition.date_watched}`)
+                .then(timeout)
     }
 }

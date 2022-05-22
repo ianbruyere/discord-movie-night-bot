@@ -10,21 +10,23 @@ const sequelize = new Sequelize('database', 'user', 'password', {
     storage: process.env.DATABASE_PATH
   })
 
-  // const ActionShop = require('./models/ActionShop.js')(sequelize, Sequelize.DataTypes);
-  // require('./models/Users.js')(sequelize, Sequelize.DataTypes);
-  // require('./models/Movie.js')(sequelize, Sequelize.DataTypes);
+  const ActionShop = require('./models/ActionShop.js')(sequelize, Sequelize.DataTypes);
+  require('./models/Users.js')(sequelize, Sequelize.DataTypes);
+  require('./models/Movie.js')(sequelize, Sequelize.DataTypes);
   require('./models/User_Movies.js')(sequelize, Sequelize.DataTypes);
 
   // sequelize.sync()
-  // sequelize.sync({ force: false }).then(async () => {
-  //   const shop = [
-  //     ActionShop.upsert({ name: 'Double Vote', cost: 1 }),
-  //     ActionShop.upsert({ name: 'Survey Takeover', cost: 3 }),
-  //     ActionShop.upsert({ name: 'Takeover', cost: 5 }),
-  //   ];
+  sequelize.sync().then(async () => {
+    const shop = [,
+      ActionShop.upsert({ name: 'Roulette', cost: 3, description: "movie randomly selected from pool of watchlists" }),
+      ActionShop.upsert({ name: 'Takeover', cost: 7, description: "choose a movie you've never seen before" }),
+      ActionShop.upsert({ name: 'Double Trouble', cost: 10, description: "you're in charge of a double feature night" }),
+      ActionShop.upsert({ name: 'Theme', cost: 15, description: "you control a set of movie nights, that follow a theme" }),
+      ActionShop.upsert({ name: 'Rewatch', cost: 25, description: "choose a movie you've seen before, a perversion of Movie Night" }),
+    ];
   
-    // await Promise.all(shop);
+    await Promise.all(shop);
     sequelize.sync()
     console.log('Database synced');
   
-  // }).catch(console.error);
+  }).catch(console.error);

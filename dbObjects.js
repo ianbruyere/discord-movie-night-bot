@@ -21,7 +21,7 @@ Reflect.defineProperty(currency, 'add', {
 	/* eslint-disable-next-line func-name-matching */
 	value: async function add(id, amount) {
 		const user = currency.get(id);
-
+		console.log("adding money...")
 		if (user) {
 			user.balance += Number(amount);
 			return user.save();

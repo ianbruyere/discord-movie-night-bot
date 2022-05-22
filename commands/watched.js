@@ -1,5 +1,6 @@
 const {Formatters, Discord } = require('discord.js');
 const { Movies } = require('../dbObjects.js')
+const { timeout } = require('../util/helpers.js')
 
 module.exports = {
     prefix: "!watched",
@@ -12,7 +13,10 @@ module.exports = {
             '😁',
             '🔥'
             ]
-        return msg.reply(`The following movies have been watched:
-        ${Formatters.codeBlock(movies.map(x =>  `${x.title}------${x.date_watched}-------${ratingsArray[x.rating]}`).join('\n'))}`);
+        longestTitleLength = Math.max(...(movies.map(el => el.title.length)));
+        msg.reply(
+            `The following movies have been watched:
+        ${Formatters.codeBlock(movies.map(x =>  `${x.title} ${"-".repeat(3+(longestTitleLength-x.title.length))} ${ratingsArray[x.rating]} --- ${x.date_watched}`).join('\n'))}`)
+        .then(timeout)
     }
 }

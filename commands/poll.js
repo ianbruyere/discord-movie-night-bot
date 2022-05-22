@@ -9,7 +9,7 @@ module.exports = {
     prefix: "!poll",
     // Define a function to pass the message to
     fn: async (msg, args) =>  {
-      if (!msg.member.roles.cache.has(process.env.ADMIN_ROLE_ID)) return msg.reply('Only Admins can grant currency!')  
+      if (!msg.member.roles.cache.has(process.env.ADMIN_ROLE_ID)) return msg.reply('Only Admins can create polls!')  
       const options = [
             '🇦',
             '🇧',
@@ -44,7 +44,7 @@ module.exports = {
         description: pollString,
       };
 
-      const message = await msg.channel.send({ embeds: [embed] }).catch(err => console.log(err));
+      const message = await msg.channel.send(`Survey says: ${ {embeds: [embed]} }`).catch(err => console.log(err));
     
       for (i = 0; i < pollsArray.length; i++) {
         await message.react(options[i]).catch(err => console.log(err));
