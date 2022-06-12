@@ -1,5 +1,4 @@
-module.exports = () => {
-    return [
+exports.options = [
         '🇦',
         '🇧',
         '🇨',
@@ -22,4 +21,3 @@ module.exports = () => {
         '🇹',
         '🇺',
     ];
-};

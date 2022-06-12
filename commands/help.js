@@ -7,7 +7,7 @@ module.exports = {
     fn: async (msg) => {
         header = `List of commands.\n`
         standardHelp = `${Formatters.codeBlock(
-            `!subscribe_movies : adds your user_id to database for the money earning\n` +
+            `!subscribe : adds your user_id to database for the money earning\n` +
             `!shop : Displays shop.\n` + 
             `!balance : your balance\n` +
             `!buy action_name : buy from action shop, cost subtracted from balance\n` +
@@ -18,13 +18,13 @@ module.exports = {
         )}`
         adminHelp = `Following For Admins:` +
             `${Formatters.codeBlock(
-            `!grant <@username> <amount> <human-readabble username> : grants a user money\n` +
+            `!grant @username amt human-readable-username> : grants a user money\n` +
             `!bulk_grant x: gives all in Movie Night Voice Channel x-amount of money\n` +
             `!bookkeeping : shows everyones balance\n` +
             `!user_watchlists : shows everyones watchlists\n` +
-            `!roulette : randomly chosen movie from user watchlists\n` + 
+            `!roulette : randomly chooses movie from user watchlists\n` + 
             `!add_watched Movie_Title|Rating : adds movie to database\n` +
-            `!survey <question> <option-1> ... <option-4> : makes a survey\n` +
+            `!poll {question} [option-1]... [option-15]> : makes a survey\n` +
             `!purge : removes bot messages from 100 latest messages\n` +
             `!test : making sure the bot actually works\n`
         )}`

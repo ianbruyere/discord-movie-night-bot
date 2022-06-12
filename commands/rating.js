@@ -1,4 +1,5 @@
 require('dotenv').config()
+const { timeout } = require('../util/helpers.js');
 
 module.exports = {
     prefix: "!rating",

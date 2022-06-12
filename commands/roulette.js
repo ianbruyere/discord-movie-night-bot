@@ -12,6 +12,7 @@ module.exports = {
       if (!interaction.member.roles.cache.has(process.env.ADMIN_ROLE_ID)) return interaction.reply('Only Admins can spin the wheel!')
       // snag all the movies
       const movies = await User_Movies.findAll()
+      let wasSelected = false;
       // choose one at random
       let selectedMovie = movies[Math.floor(Math.random() * movies.length)].title
       // get appropiate channel to send response in
@@ -36,26 +37,27 @@ module.exports = {
         .then(async (message) => {
           message = message.first()
           if (message.content.toUpperCase() == 'YES') {
+            wasSelected = true;
             movieTitle = removeArticles(selectedMovie).toLowerCase()
             // find all matching movies
             const moviesToBeDeleted = await User_Movies.destroy({
               where: { 
-                user: '309110524690300929',
-                // title: {
-                //   [Op.like] : movieTitle
-                // }}
+                title: {
+                  [Op.like] : movieTitle
+                }}
               }
-            }); // end of sequelize statement
-            
-            message.reply("Movie Confirmed. Purging Entries from Watchlists").then(timeout)
-            console.log(moviesToBeDeleted)
+            )// end of sequelize statement
+            message.reply("Movie Confirmed. Purging Entries from Watchlists")
           } else {
             message.reply("Movie Not Chosen. Ask Admin to Spin Wheel Again.").then(timeout)
           }
         })
         .catch(collected => {
-          interaction.channel.send('Timeout');
+          interaction.channel.send('Times up!');
         })
-      })
+        if (!wasSelected){
+          timeout(interaction)
+        }
+      }) // end of determination
   }
 }

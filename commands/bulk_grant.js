@@ -16,9 +16,10 @@ module.exports = {
         let user = await Users.findOne({where : {user_id : user_id}})
         console.log(user)
         if (!user) continue;
-        console.log(`user balance${user.balance}`)
-        if (user.balance <= 20) {
+        console.log(`user balance before: ${user.balance}`)
+        if (user.balance < 20) {
            user.balance += amt
+           if (user.balance > 20) {user.balance = 20}
         }
         console.log(`user balance after: ${user.balance}`)
         await user.save()         

@@ -14,8 +14,8 @@ module.exports = {
             `The following movies are on your watchlist:
         ${Formatters.codeBlock(
             movies.map(x =>  
-            `${x.title}${"-".repeat(3+(longestTitleLength-x.title.length))}${x.date_added}`).join('\n'))}`
-            )
-        .then(timeout);
+            `${x.title}${"-".repeat(3+(longestTitleLength-x.title.length))}${x.date_added}`)
+            .join('\n')
+            )}`).then(timeout);
     }
 }
