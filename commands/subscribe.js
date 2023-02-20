@@ -7,6 +7,5 @@ module.exports = {
         // will insert user id into database for movies if they want to opt in
         await Users.create({user_id: interaction.author.id})
         interaction.reply(`${interaction.author} has subscribed to movies!`)
-
     }
 }

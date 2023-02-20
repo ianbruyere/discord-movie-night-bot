@@ -1,62 +1,89 @@
 require('dotenv').config();
 const Discord = require(`discord.js`);
-const { User_Movies } = require('../dbObjects.js');
+const { User_Movies, Users, ActionShop } = require('../dbObjects.js');
 const { Op } = require("sequelize");
-const { removeArticles, timeout } = require('../util/helpers.js');
+const { removeArticles, timeout, get_current_mem_ids, get_username, can_buy, buy_action } = require('../util/helpers.js');
 
 module.exports = {
     // Define the prefix
     prefix: "!roulette",
-    fn: async (interaction) => {
-      // only admin can do it
-      if (!interaction.member.roles.cache.has(process.env.ADMIN_ROLE_ID)) return interaction.reply('Only Admins can spin the wheel!')
-      // snag all the movies
-      const movies = await User_Movies.findAll()
+    fn: async (inter) => {      
+      // get current Members in chat
+      const members = get_current_mem_ids(inter, process.env.MOVIE_NIGHT_VOICE_CHAT)
+      const item = await ActionShop.findOne({ where: { name: { [Op.like]: "roulette" } } });  
+      const user = await Users.findOne({ where: { user_id: inter.author.id } });
+
+      // check to make sure user can make purchase
+      if (!can_buy(user, item)) return;
+   
+      // snag all movies on current participating members watchlists
+      const movies = await User_Movies.findAll({
+        where: {
+          user: {[Op.in]: members}
+        }
+      })
+
+      // check to make sure we actually got movies
+      if (movies.length == 0) return inter.reply("Must be in Movie Voice Chat to Trigger And have movies in your watchlist.")
+
       let wasSelected = false;
       // choose one at random
-      let selectedMovie = movies[Math.floor(Math.random() * movies.length)].title
-      // get appropiate channel to send response in
-      //const channel = interaction.channel.id//(!process.env.DEBUG ? interaction.guild.channels.cache.get(process.env.MOVIE_NIGHT_TEXT_CHANNEL) : interaction.guild.channels.cache.get(process.env.TESTING_TEXT_CHANNEL))
+      let selectedMovie = movies[Math.floor(Math.random() * movies.length)]
+      console.log(movies.map(movie => movie.title))
+
+      const username = await get_username(inter, selectedMovie.user)
+      console.log(`Movie: ${selectedMovie.title}\nuser: ${username}`)
       // make it so only admin who spun can ensure a movie was correct
-      //let filter = m => { m.author.id == interaction.author.id }
+      //let filter = m => { m.author.id == inter.author.id }
 
 
-      // send roulette result and ask for confirmation from spinner(admin)
-      interaction.channel.send(`Roulette Result is:\n` +
-      `${"🥳".repeat(selectedMovie.length)}\n` +
-      `${'\t'.repeat(selectedMovie.length/2)}**${selectedMovie}**\n` +
-      `${"🥳".repeat(selectedMovie.length)}\n` +
+      // send roulette result
+      inter.channel.send(`Roulette Result is:\n` +
+      `${"🥳".repeat(selectedMovie.title.length)}\n` +
+      `${'\t'.repeat(selectedMovie.title.length/2)}**${selectedMovie.title}**\n` +
+      `${"🥳".repeat(selectedMovie.title.length)}\n` +
       `Is this Movie alright? \`YES\` / \`NO\``).then(() => {
         // await response
-        interaction.channel.awaitMessages({
+        inter.channel.awaitMessages({
           //filter,
           max: 1,
-          time: 600000,
+          time: 120000,
           errors: ['time']
-        })
-        .then(async (message) => {
+        }).then(async (message) => {
           message = message.first()
+          // need to be admin to finalize decision
+          if (!message.member.roles.cache.has(process.env.ADMIN_ROLE_ID)) return message.reply("Must be admin to finalize movie selection")
           if (message.content.toUpperCase() == 'YES') {
             wasSelected = true;
-            movieTitle = removeArticles(selectedMovie).toLowerCase()
+            movieTitle = removeArticles(selectedMovie.title).toLowerCase()
             // find all matching movies
-            const moviesToBeDeleted = await User_Movies.destroy({
+            //TODO make a helper command
+            await User_Movies.destroy({
               where: { 
                 title: {
                   [Op.like] : movieTitle
                 }}
               }
             )// end of sequelize statement
+
+            // subtract from balance 
+            await Users.increment({balance : -item.cost}, {
+              where: {
+                user_id: selectedMovie.user
+              }
+            })
+
             message.reply("Movie Confirmed. Purging Entries from Watchlists")
           } else {
-            message.reply("Movie Not Chosen. Ask Admin to Spin Wheel Again.").then(timeout)
+            message.reply("Movie Not Chosen.")//.then(timeout)
           }
         })
         .catch(collected => {
-          interaction.channel.send('Times up!');
+          console.log(collected)
+          inter.channel.send('Times up!');
         })
         if (!wasSelected){
-          timeout(interaction)
+          //timeout(inter)
         }
       }) // end of determination
   }

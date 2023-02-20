@@ -1,30 +1,26 @@
 require('dotenv').config();
 const Discord = require(`discord.js`);
 const { Users } = require('../dbObjects.js');
-const { timeout } = require('../util/helpers.js');
+const { timeout, get_current_mem_ids } = require('../util/helpers.js');
+const { Op } = require("sequelize");
+
 
 module.exports = {
     // Define the prefix
     prefix: "!bulk_grant",
     fn: async (interaction, args) => {
       if (!interaction.member.roles.cache.has(process.env.ADMIN_ROLE_ID)) return msg.reply('Only Admins can !bulk_grant!')
-      const channel = interaction.guild.channels.cache.get(process.env.MOVIE_NIGHT_VOICE_CHAT)
-      const members =  channel.members
-      console.log(members)
+      
+      const members = get_current_mem_ids(interaction, process.env.MOVIE_NIGHT_VOICE_CHAT)  
       const amt = Number(args[0])
-      for(let [user_id, guildMember] of members) {
-        let user = await Users.findOne({where : {user_id : user_id}})
-        console.log(user)
-        if (!user) continue;
-        console.log(`user balance before: ${user.balance}`)
-        if (user.balance < 20) {
-           user.balance += amt
-           if (user.balance > 20) {user.balance = 20}
+      const users = await Users.increment({balance : +amt}, {
+        where: {
+          balance : {[Op.lt] : process.env.MAX_CURRENCY},
+          user_id: {
+            [Op.in]: members
+          }
         }
-        console.log(`user balance after: ${user.balance}`)
-        await user.save()         
-      }
-      interaction.reply(`Everyone in Voice Channel Movie-Night has been granted ${amt}💰`)
-        .then(timeout)
+      })
+      console.log("DONE!")
     }
 }

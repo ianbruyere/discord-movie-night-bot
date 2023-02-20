@@ -13,7 +13,7 @@ module.exports = {
             `!buy action_name : buy from action shop, cost subtracted from balance\n` +
             `!watched : lists movies watched and date watched\n` +
             `!add_my_movie Movie_Title : adds movie to personal watchlist\n` +
-            `!my_watchlist : Brings up your watchlist\n` +
+            `!watchlist : Brings up your watchlist\n` +
             `!rating : rating guide`
         )}`
         adminHelp = `Following For Admins:` +
@@ -21,7 +21,7 @@ module.exports = {
             `!grant @username amt human-readable-username> : grants a user money\n` +
             `!bulk_grant x: gives all in Movie Night Voice Channel x-amount of money\n` +
             `!bookkeeping : shows everyones balance\n` +
-            `!user_watchlists : shows everyones watchlists\n` +
+            `!watchlists : shows everyones watchlists\n` +
             `!roulette : randomly chooses movie from user watchlists\n` + 
             `!add_watched Movie_Title|Rating : adds movie to database\n` +
             `!poll {question} [option-1]... [option-15]> : makes a survey\n` +

@@ -14,9 +14,17 @@ module.exports = {
             '🔥'
             ]
         longestTitleLength = Math.max(...(movies.map(el => el.title.length)));
-        msg.reply(
-            `The following movies have been watched:
-        ${Formatters.codeBlock(movies.map(x =>  `${x.title} ${"-".repeat(3+(longestTitleLength-x.title.length))} ${ratingsArray[x.rating]} --- ${x.date_watched}`).join('\n'))}`)
-        .then(timeout)
+        let currMsg = "The following movies have been watched:\n\n"
+        let msgArr=(movies.map(x =>  
+            `${x.title} ${"-".repeat(3+(longestTitleLength-x.title.length))}${ratingsArray[x.rating]}---${x.date_watched}`))
+        
+        while(msgArr.length > 0) {
+            currMsg += msgArr.shift() + "\n"
+            if (currMsg.length > 1900) {
+                msg.reply(Formatters.codeBlock(currMsg)).then(timeout)
+                currMsg = ""
+            }
+        }
+        return msg.reply(Formatters.codeBlock(currMsg)).then(timeout)
     }
 }
