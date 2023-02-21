@@ -1,5 +1,5 @@
 const { Users } = require('../dbObjects.js');
-const { timeout } = require('../util/helpers.js');
+const { timeout, is_admin } = require('../util/helpers.js');
 const { Formatters, Discord } = require('discord.js');
 
 
@@ -7,7 +7,7 @@ module.exports = {
     prefix: "!bookkeeping",
     fn: async(inter) => {
         // ADMINS only
-        if (!inter.member.roles.cache.has(process.env.ADMIN_ROLE_ID)) return inter.reply('Only Admins can Bookkeep!')
+        if (!is_admin(inter)) return inter.reply('Only Admins can Bookkeep!')
 
         const users = await Users.findAll()
         const mems = await inter.guild.members.fetch()

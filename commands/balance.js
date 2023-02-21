@@ -3,13 +3,13 @@ const { timeout } = require('../util/helpers.js');
 
 module.exports = {
     prefix: "!balance",
-    fn: async(interaction, args) => {
+    fn: async(inter) => {
         // lets a user check balance
-        const user_id = interaction.author.id;
-        const user = await Users.findOne({where : {user_id: user_id}})
-        if(!user) return interaction.reply('Subscribe first!')
-        console.log(interaction.id)
-        interaction.reply(`${interaction.author} has ${user.balance }💰\n` + 
+        const user_id = inter.author.id;
+        const user = await Users.findOne({ where : { user_id: user_id } })
+        if(!user) return inter.reply('Subscribe first!')
+
+        inter.reply(`${inter.author} has ${user.balance}💰\n` + 
         `You get 1💰/movie watched`)
             .then(timeout);
     }

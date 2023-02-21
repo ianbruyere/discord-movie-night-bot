@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+// helpers for discord api operations mainly
+// and general formaters
 module.exports = {
  dateFormatter: (dateWatched) => {
     return `${dateWatched.toLocaleDateString("en-US", {year: "numeric"})}-` +
@@ -49,6 +51,8 @@ module.exports = {
        return name
      },
 
+     is_admin: (inter) => inter.member.roles.cache.has(process.env.ADMIN_ROLE_ID),
+     
      can_buy: async(user, item) => {
        if (item.cost > user.balance) {
               inter.reply(`You currently have ${user.balance}, but the ${item.name} costs ${item.cost}!`);
@@ -57,10 +61,6 @@ module.exports = {
        return true
      },
 
-     buy_action: async(user, item) => {       
-       user.balance -= item.cost;
-       await user.save();
-     },
 
      command_completion: (command) => {
        console.log(`${command} has Completed!`)

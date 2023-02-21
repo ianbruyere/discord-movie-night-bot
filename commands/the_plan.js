@@ -1,10 +1,10 @@
 require('dotenv').config();
 const { Discord, Formatters } = require(`discord.js`);
-const { removeArticles, timeout } = require('../util/helpers.js');
+const { timeout } = require('../util/helpers.js');
 
 module.exports = {
     prefix: "!the_plan",
-    fn: async (msg) => {
+    fn: async (inter) => {
         header = `2023 Movie Night Goals!\n`
         goals = `${Formatters.codeBlock(
             `Goal 1. To Watch All Mad Maxes.\n` +
@@ -15,7 +15,7 @@ module.exports = {
             `\t*User Choice\n` +
             `Goal 4. To Watch 25% of Kanopys Intro To Film Movies.`
         )}`
-        msg.reply(header + goals).then(timeout)
+        inter.reply(header + goals).then(timeout)
     }
 
 }

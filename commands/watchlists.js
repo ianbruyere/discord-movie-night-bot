@@ -1,14 +1,13 @@
 require('dotenv').config();
 const { Formatters, Discord } = require('discord.js');
-const { dateFormatter, timeout } = require('../util/helpers.js')
+const { timeout, is_admin } = require('../util/helpers.js')
 const { User_Movies } = require('../dbObjects.js')
-// const { timeout } = require('../util/helpers.js');
 
 
 module.exports = {
     prefix: "!watchlists",
     fn: async (inter) => {
-        if (!inter.member.roles.cache.has(process.env.ADMIN_ROLE_ID)) return inter.reply('Only Admins can see ALL user watchlists!')
+        if (!is_admin(inter)) return inter.reply('Only Admins can see ALL user watchlists!')
         const movies = await User_Movies.findAll()
         const mems = await inter.guild.members.fetch() // chan.members;
         const longestTitleLength = Math.max(...(movies.map(x => x.title.length)))

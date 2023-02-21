@@ -2,7 +2,7 @@ const Discord = require(`discord.js`);
 
 module.exports = {
     // Define the prefix
-    prefix: "!args",
+    prefix: "!scratcher",
     // Define a function to pass the message to
     fn: async (msg) => {
       const args = msg.content.split(' ');

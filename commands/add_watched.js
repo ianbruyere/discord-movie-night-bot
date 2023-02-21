@@ -1,13 +1,14 @@
 require('dotenv').config();
 const Discord = require('discord.js');
-const { dateFormatter, timeout } = require('../util/helpers.js')
+const { dateFormatter, timeout, is_admin } = require('../util/helpers.js')
 const { Movies } = require('../dbObjects.js')
 
 
 module.exports = {
     prefix: "!add_watched",
     fn: async (msg, args) => {
-        if (!msg.member.roles.cache.has(process.env.ADMIN_ROLE_ID)) return msg.reply('Only Admins can add watched movies!')
+        if (!is_admin(msg)) return msg.reply('Only Admins can add watched movies!')
+        
         const movieTitle = args.join(' ').split('|')[0]
         const rating = args.join().split('|')[1]
         const dateWatched = String(dateFormatter(new Date()))

@@ -4,7 +4,7 @@ const { Discord, Formatters } = require(`discord.js`);
 module.exports = {
     // Will bring up all possible commands for Bot
     prefix: "!help",
-    fn: async (msg) => {
+    fn: async (inter) => {
         header = `List of commands.\n`
         standardHelp = `${Formatters.codeBlock(
             `!subscribe : adds your user_id to database for the money earning\n` +
@@ -28,8 +28,8 @@ module.exports = {
             `!purge : removes bot messages from 100 latest messages\n` +
             `!test : making sure the bot actually works\n`
         )}`
-        if (msg.member.roles.cache.has(process.env.ADMIN_ROLE_ID)){
-            msg.reply(header + standardHelp + adminHelp)
-        } else {msg.reply(header + standardHelp)}
+        if (inter.member.roles.cache.has(process.env.ADMIN_ROLE_ID)){
+            inter.reply(header + standardHelp + adminHelp)
+        } else {inter.reply(header + standardHelp)}
     }
 }

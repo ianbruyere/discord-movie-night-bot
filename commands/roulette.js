@@ -2,7 +2,7 @@ require('dotenv').config();
 const Discord = require(`discord.js`);
 const { User_Movies, Users, ActionShop } = require('../dbObjects.js');
 const { Op } = require("sequelize");
-const { removeArticles, timeout, get_current_mem_ids, get_username, can_buy, buy_action } = require('../util/helpers.js');
+const { removeArticles, timeout, get_current_mem_ids, get_username, can_buy, is_admin } = require('../util/helpers.js');
 
 module.exports = {
     // Define the prefix
@@ -10,23 +10,19 @@ module.exports = {
     fn: async (inter) => {      
       // get current Members in chat
       const members = get_current_mem_ids(inter, process.env.MOVIE_NIGHT_VOICE_CHAT)
+      // get actions
       const item = await ActionShop.findOne({ where: { name: { [Op.like]: "roulette" } } });  
       const user = await Users.findOne({ where: { user_id: inter.author.id } });
 
       // check to make sure user can make purchase
-      if (!can_buy(user, item)) return;
+      if (!can_buy(user, item)) return inter.reply("You don't have enough funds!");
    
       // snag all movies on current participating members watchlists
-      const movies = await User_Movies.findAll({
-        where: {
-          user: {[Op.in]: members}
-        }
-      })
+      const movies = await User_Movies.findAll({ where: { user: { [Op.in]: members } } })
 
       // check to make sure we actually got movies
       if (movies.length == 0) return inter.reply("Must be in Movie Voice Chat to Trigger And have movies in your watchlist.")
 
-      let wasSelected = false;
       // choose one at random
       let selectedMovie = movies[Math.floor(Math.random() * movies.length)]
       console.log(movies.map(movie => movie.title))
@@ -52,10 +48,11 @@ module.exports = {
         }).then(async (message) => {
           message = message.first()
           // need to be admin to finalize decision
-          if (!message.member.roles.cache.has(process.env.ADMIN_ROLE_ID)) return message.reply("Must be admin to finalize movie selection")
+          if (!is_admin(message)) return message.reply("Must be admin to finalize movie selection")
+
           if (message.content.toUpperCase() == 'YES') {
-            wasSelected = true;
             movieTitle = removeArticles(selectedMovie.title).toLowerCase()
+
             // find all matching movies
             //TODO make a helper command
             await User_Movies.destroy({
@@ -80,11 +77,8 @@ module.exports = {
         })
         .catch(collected => {
           console.log(collected)
-          inter.channel.send('Times up!');
+          inter.channel.send('Command ended. Movie Not Selected');
         })
-        if (!wasSelected){
-          //timeout(inter)
-        }
       }) // end of determination
   }
 }

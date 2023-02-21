@@ -14,8 +14,8 @@ const client = new Client({intents : [
 const commands = {}
 // Get the file names from the commands directory
 const files = fs.readdirSync('./commands')
-// Filter out any non-js files
-const jsFiles = files.filter(file => file.endsWith('.js'))
+// Filter out any non-js files and any .test.js files
+const jsFiles = files.filter(file => file.endsWith('.js') && !file.endsWith('test.js'))
 // Foreach, require the file, check for the right exports, add to command object
 jsFiles.forEach(commandFile => {
     const command = require(`./commands/${commandFile}`)

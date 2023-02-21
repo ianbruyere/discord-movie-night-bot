@@ -4,16 +4,17 @@ const { Op } = require('sequelize');
 
 module.exports = {
     prefix: "!buy",
-    fn: async(interaction, args) => {
+    fn: async(inter, args) => {
         const itemName = args.join(' ');
         const item = await ActionShop.findOne({ where: { name: { [Op.like]: itemName } } });
-        const user = await Users.findOne({ where: { user_id: interaction.author.id } });
-        const userName = interaction.author;
-        const channel = interaction.guild.channels.cache.get(process.env.MOVIE_NIGHT_TEXT_CHANNEL)
-        console.log(item)
-        if (!item) return interaction.reply(`That item doesn't exist.`);
+        const user = await Users.findOne({ where: { user_id: inter.author.id } });
+        const userName = inter.author;
+        const channel = inter.guild.channels.cache.get(process.env.MOVIE_NIGHT_TEXT_CHANNEL)
+
+        if (!item) return inter.reply(`That item doesn't exist.`);
+        
         if (item.cost > user.balance) {
-            return interaction.reply(`You currently have ${user.balance}, but the ${item.name} costs ${item.cost}!`);
+            return inter.reply(`You currently have ${user.balance}, but the ${item.name} costs ${item.cost}!`);
         }
         
         user.balance -= item.cost;

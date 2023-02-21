@@ -4,8 +4,8 @@ const { Users } = require('../dbObjects.js');
 
 module.exports = {
     // Define the prefix
-    prefix: "!test",
-    fn: async (interaction) => {
+    prefix: "!awake",
+    fn: async () => {
       console.log("Here and ready to serve")
     }
 }

@@ -3,9 +3,9 @@ const { Users } = require('../dbObjects.js')
 
 module.exports = {
     prefix: "!subscribe",
-    fn: async(interaction, args) => {
+    fn: async(inter) => {
         // will insert user id into database for movies if they want to opt in
-        await Users.create({user_id: interaction.author.id})
-        interaction.reply(`${interaction.author} has subscribed to movies!`)
+        await Users.create({user_id: inter.author.id})
+        inter.reply(`${inter.author} has subscribed to movies!`)
     }
 }
